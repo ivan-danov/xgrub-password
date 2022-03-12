@@ -11,7 +11,7 @@ PROJECT_BASE_VERSION = 1.0
 # endif
 
 # define system name (focal, jammy, ...)
-SYSTEM_NAME := $(shell lsb_release -c -s)
+# SYSTEM_NAME := $(shell lsb_release -c -s)
 
 # define git branch
 ifndef GIT_BRANCH
