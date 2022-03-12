@@ -79,7 +79,7 @@ jobs:
       run: make info
 
     - name: Create deb package
-      run: make deb
+      run: make deb_binary
 
     - name: Display artifacts
       run: ls -R output/xgrup-password_*_all.deb
