@@ -1,5 +1,14 @@
+PROJECT = xgrub-password
+
 DEBNAME = xgrub-password
+
+GIT_LAST_TAG := $(shell git describe --tags --abbrev=0 2>/dev/null)
+
+# ifdef GIT_LAST_TAG
+# PROJECT_BASE_VERSION = $(GIT_LAST_TAG)
+# else
 PROJECT_BASE_VERSION = 1.0
+# endif
 
 # define system name (focal, jammy, ...)
 SYSTEM_NAME := $(shell lsb_release -c -s)
@@ -58,21 +67,39 @@ ifndef DESTDIR
 DESTDIR := output
 endif
 
+ifneq ($(V),0)
+Q =
+else
+Q = @
+endif
 
 all:
-	echo all
+	$(Q)echo "make deb | make clean"
+
+info:
+	$(Q)echo "      This makefile: $(firstword $(MAKEFILE_LIST))"
+	$(Q)echo "         GIT branch: $(GIT_BRANCH)"
+	$(Q)echo "       GIT revision: $(GIT_REV)"
+	$(Q)echo " GIT revision count: $(GIT_REV_COUNT)"
+	$(Q)echo "       GIT last tag: $(GIT_LAST_TAG)"
+	$(Q)echo "            Project: $(PROJECT)"
+	$(Q)echo "    Project version: $(PROJECT_VERSION)"
+	${Q}echo "   DEB Package name: $(DEBNAME)_$(PROJECT_VERSION)_all.deb"
+
+version:
+	@echo "$(PROJECT_VERSION)"
 
 clean:
-	echo clean
+	$(Q)echo clean
 	$(RM) -r debian/$(DEBNAME)/
 	$(RM) -r output/
 
 install:
-	echo "install begin"
+	$(Q)echo "install begin"
 	install -m 0755 xgrub-password -D --target-directory="$(DESTDIR)/usr/bin"
 	install -m 0755 xgrub-password-update -D --target-directory="$(DESTDIR)/usr/lib/$(DEBNAME)"
 	install -m 0644 99xgrub-password -D --target-directory="$(DESTDIR)/etc/apt/apt.conf.d"
-	echo "install done"
+	$(Q)echo "install done"
 
 #
 # ---------- Git-buildpackage begin----------
