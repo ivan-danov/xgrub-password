@@ -1,0 +1,11 @@
+xgrub-password (1.0.1+3720ad4) focal; urgency=medium
+
+  * [3720ad42] Initial commit
+
+ -- Ivan Danov <idanov@gmail.com>  Sat, 12 Mar 2022 15:05:32 +0200
+
+xgrub-password (0.0) focal; urgency=medium
+
+  * project started
+
+ -- Ivan Danov <idanov@gmail.com>  Fri, 12 Mar 2022 15:00:00 +0200
