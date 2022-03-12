@@ -122,6 +122,7 @@ GBP_DCH_OPTS += --new-version=$(PROJECT_VERSION)
 GBP_DCH_OPTS += --git-author
 GBP_DCH_OPTS += --commit
 GBP_DCH_OPTS += --release
+GBP_DCH_OPTS += --spawn-editor=never
 # GBP_DCH_OPTS += -v
 
 # source and binary packages
