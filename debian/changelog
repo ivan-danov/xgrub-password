@@ -1,3 +1,9 @@
+xgrub-password (1.0.18+3c8355f) focal; urgency=medium
+
+  * [3c8355f6] github action: disable automatic start
+
+ -- Ivan Danov <idanov@gmail.com>  Sat, 12 Mar 2022 16:04:18 +0200
+
 xgrub-password (1.0.16+1ddc562) focal; urgency=medium
 
   * [1ddc5624] fix gitaction workflow
