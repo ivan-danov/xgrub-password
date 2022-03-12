@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash -e
 
-set -eu
+. /usr/share/debconf/confmodule
 
 # echo "DEBUG: xgrub-password prerm called, $# args: $@"
 case "$1" in
@@ -9,5 +9,3 @@ case "$1" in
 		/usr/lib/xgrub-password/xgrub-password-update
 		;;
 esac
-
-#DEBHELPER#

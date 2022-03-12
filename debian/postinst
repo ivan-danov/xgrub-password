@@ -1,6 +1,4 @@
-#!/bin/sh
-
-set -eu
+#!/bin/bash -e
 
 # echo DEBUG: xgrub-password postinst called, $# args: "$@"
 
@@ -8,5 +6,3 @@ if [ "$1" = "triggered" ]; then
 	echo DEBUG: xgrub-password postinst called, $# args: "$@"
 	/usr/lib/xgrub-password/xgrub-password-update
 fi
-
-#DEBHELPER#

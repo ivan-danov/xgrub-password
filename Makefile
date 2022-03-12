@@ -1,7 +1,5 @@
 PROJECT = xgrub-password
 
-DEBNAME = xgrub-password
-
 GIT_LAST_TAG := $(shell git describe --tags --abbrev=0 2>/dev/null)
 
 # ifdef GIT_LAST_TAG
@@ -10,68 +8,56 @@ GIT_LAST_TAG := $(shell git describe --tags --abbrev=0 2>/dev/null)
 PROJECT_BASE_VERSION = 1.0
 # endif
 
-# define system name (focal, jammy, ...)
-# SYSTEM_NAME := $(shell lsb_release -c -s)
+DEBNAME = $(PROJECT)
+ARCH = all
 
-# define git branch
-ifndef GIT_BRANCH
-export GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD 2>/dev/null)
-endif
-ifndef GIT_BRANCH
-export GIT_BRANCH := unknown
-endif
+VENDOR_NAME = "Ivan Danov"
+VENDOR_YEAR = "2022"
+VENDOR_EMAIL = ivan.danov@gmail.com
+VENDOR_SITE = https://github.com/ivan-danov/xgrub-password
 
-# define git revision
-ifndef GIT_REV
-export GIT_REV := $(shell git rev-parse --verify HEAD --short 2>/dev/null)
-endif
-ifndef GIT_REV
-export GIT_REV := unknown
-endif
+DEBDESC  = "$(VENDOR_NAME) package for repo\\n"
+DEBDESC += "custom repository"
 
-# define git revision count (incremental)
-ifndef GIT_REV_COUNT
-ifdef GIT_BRANCH
-export GIT_REV_COUNT := $(shell git rev-list --count $(GIT_BRANCH) 2>/dev/null)
-else
-export GIT_REV_COUNT := $(shell git rev-list --count HEAD 2>/dev/null)
-endif
-endif
-ifndef GIT_REV_COUNT
-export GIT_REV_COUNT := 1
-endif
+DEBDIR = $(PROJECT)_deb
 
-#
-# NOTE: get revision hash from revision count
-#
-# long
-# git rev-list --reverse master|head -${GIT_REV_COUNT}|tail -1
-# short
-# git rev-list --reverse master|head -${GIT_REV_COUNT}|tail -1|cut -b 1-7
-#
-
-# see https://semver.org/
-ifndef PROJECT_VERSION
-# export PROJECT_VERSION ?= $(PROJECT_BASE_VERSION).$(GIT_REV_COUNT)+$(GIT_REV)+$(SYSTEM_NAME)
-export PROJECT_VERSION ?= $(PROJECT_BASE_VERSION).$(GIT_REV_COUNT)+$(GIT_REV)
-endif # PROJECT_VERSION
-
-
-# debian package name info
-# NOTE: no :=
-# DEB_INFO = $(GIT_BRANCH)$(SQL_DRIVERS)-"$(SYSTEM_INFO)"_$(ARCH)
-
-# DEB_VERSION = $(DEBNAME)_$(PROJECT_VERSION)-$(DEB_INFO).deb
-
-ifndef DESTDIR
-DESTDIR := output
-endif
+PACKAGE_DEPS += ,grub-common, grub2-common, sed (>= 4.0), debianutils (>= 4.0), gawk, coreutils (>= 8.0)
 
 ifneq ($(V),0)
 Q =
 else
 Q = @
 endif
+
+# define git branch
+GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD 2>/dev/null)
+ifndef GIT_BRANCH
+GIT_BRANCH := unknown
+endif
+
+# define git revision
+GIT_REV := $(shell git rev-parse --verify HEAD --short 2>/dev/null)
+ifndef GIT_REV
+GIT_REV := unknown
+endif
+
+# define git revision count (incremental)
+ifdef GIT_BRANCH
+GIT_REV_COUNT := $(shell git rev-list --count $(GIT_BRANCH) 2>/dev/null)
+else
+GIT_REV_COUNT := $(shell git rev-list --count HEAD 2>/dev/null)
+endif
+ifndef GIT_REV_COUNT
+GIT_REV_COUNT := 1
+endif
+
+# see https://semver.org/
+PROJECT_VERSION ?= $(PROJECT_BASE_VERSION).$(GIT_REV_COUNT)+$(GIT_REV)
+
+
+# debian package full name
+FINAL_DEBNAME = $(DEBNAME)_$(PROJECT_VERSION)_all.deb
+
 
 all:
 	$(Q)echo "make deb | make clean"
@@ -84,64 +70,133 @@ info:
 	$(Q)echo "       GIT last tag: $(GIT_LAST_TAG)"
 	$(Q)echo "            Project: $(PROJECT)"
 	$(Q)echo "    Project version: $(PROJECT_VERSION)"
-	${Q}echo "   DEB Package name: $(DEBNAME)_$(PROJECT_VERSION)_all.deb"
+	${Q}echo "   DEB Package name: $(FINAL_DEBNAME)"
 
 version:
 	@echo "$(PROJECT_VERSION)"
 
+
+ifndef DEBDIR
+DEBDIR = ${DEBNAME}_deb/
+endif
+
+# GIT2CL := $(strip $(shell which git2cl))
+GIT2CL := git2cl
+
+# begin of debian packet
+define deb_begin
+	$(Q)$(RM) -rf $(DEBDIR)
+	$(Q)mkdir -p $(DEBDIR)/usr/share/doc/$(DEBNAME)
+	$(Q)mkdir -p $(DEBDIR)/DEBIAN
+
+	$(Q)cp debian/copyright $(DEBDIR)/usr/share/doc/$(DEBNAME)/copyright
+endef # deb_begin
+
+ifneq ($(GIT2CL),)
+define deb_changelog
+	$(Q)$(GIT2CL) > $(DEBDIR)/usr/share/doc/$(DEBNAME)/changelog
+	$(Q)gzip -9 -n $(DEBDIR)/usr/share/doc/$(DEBNAME)/changelog
+endef # deb_changelog
+else # GIT2CL
+define deb_changelog
+	$(Q)echo "$(shell date -R)  $(VENDOR_NAME) ($(VENDOR_EMAIL))" > $(DEBDIR)/usr/share/doc/$(DEBNAME)/changelog
+	$(Q)echo "  * Release $(PROJECT_VERSION)" >> $(DEBDIR)/usr/share/doc/$(DEBNAME)/changelog
+	$(Q)echo "  * Generated from:" >> $(DEBDIR)/usr/share/doc/$(DEBNAME)/changelog
+	$(Q)gzip -9 -n $(DEBDIR)/usr/share/doc/$(DEBNAME)/changelog
+endef # deb_changelog
+endif # GIT2CL
+
+define deb_control
+	$(Q)echo "Package: $(DEBNAME)" > $(DEBDIR)/DEBIAN/control
+	$(Q)echo "Version: $(PROJECT_VERSION)" >> $(DEBDIR)/DEBIAN/control
+	$(Q)echo "Architecture: $(ARCH)" >> $(DEBDIR)/DEBIAN/control
+	$(Q)echo "Section: misc" >> $(DEBDIR)/DEBIAN/control
+	$(Q)echo "Maintainer: $(VENDOR_NAME) <$(VENDOR_EMAIL)>" >> $(DEBDIR)/DEBIAN/control
+	$(Q)echo "Homepage: $(VENDOR_SITE)" >> $(DEBDIR)/DEBIAN/control
+	$(Q)echo "Priority: optional" >> $(DEBDIR)/DEBIAN/control
+	$(Q)echo "Pre-depend: debconf" >> $(DEBDIR)/DEBIAN/control
+	$(Q)echo "Depends: lsb-base, debconf (>= 0.5) | debconf-2.0 $(PACKAGE_DEPS)" >> $(DEBDIR)/DEBIAN/control
+	$(Q)echo "Installed-Size: `du -sl $(DEBDIR)/|cut -f 1`" >> $(DEBDIR)/DEBIAN/control
+	$(Q)echo "Description: $(DEBDESC)" >> $(DEBDIR)/DEBIAN/control
+	$(Q)chmod 644 $(DEBDIR)/DEBIAN/control
+endef # deb_control
+
+# end of debian packet
+define deb_end
+	$(Q)$(foreach f, \
+		$(wildcard debian/preinst) $(wildcard debian/postinst) \
+		$(wildcard debian/prerm) $(wildcard debian/postrm) \
+		$(wildcard debian/config), \
+		cp $(f) $(DEBDIR)/DEBIAN/;chmod 755 $(DEBDIR)/DEBIAN/$(notdir $(f)); \
+		)
+
+	$(Q)$(foreach f, $(wildcard debian/templates) $(wildcard debian/triggers), \
+		cp $(f) $(DEBDIR)/DEBIAN/;chmod 644 $(DEBDIR)/DEBIAN/$(notdir $(f)); \
+		)
+
+	$(Q)$(foreach mn, 1 2 3 4 5 6 7 8, \
+		$(foreach f, $(wildcard *.$(mn)), \
+			mkdir -p $(DEBDIR)/usr/share/man/man$(mn); \
+			cp $(f) $(DEBDIR)/usr/share/man/man$(mn); \
+			) \
+		)
+	$(Q)if [ -d $(DEBDIR)/usr/share/man ]; then \
+		find $(DEBDIR)/usr/share/man/ -name '*.[12345678]' \
+		-exec gzip -9 -n '{}' \;; fi
+
+	$(Q)find $(DEBDIR) -name '.*.kate-swp' -exec rm -f {} \;
+	$(Q)find $(DEBDIR) -name '.*.swp' -exec rm -f {} \;
+	$(Q)find $(DEBDIR) -name '.AppleDouble' -exec rm -f {} \;
+	$(Q)find $(DEBDIR) -name '.DS_Store' -exec rm -f {} \;
+
+	$(Q)cd $(DEBDIR);if [ -d etc ]; then \
+		find etc -type f -exec md5sum '{}' \; > DEBIAN/md5sums; fi
+	$(Q)cd $(DEBDIR);if [ -d usr ]; then \
+		find usr -type f -exec md5sum '{}' \; >> DEBIAN/md5sums; fi
+	$(Q)cd $(DEBDIR);if [ -d lib ]; then \
+		find lib -type f -exec md5sum '{}' \; >> DEBIAN/md5sums; fi
+
+	$(Q)cd $(DEBDIR);if [ -d etc ]; then \
+		find etc -type f -fprintf DEBIAN/conffiles "/%p\n"; fi
+
+	$(Q)chmod -R g-w $(DEBDIR)
+	$(Q)fakeroot dpkg --build $(DEBDIR) $(FINAL_DEBNAME)
+	-$(Q)lintian $(LINTIAN_FLAGS) --no-tag-display-limit $(FINAL_DEBNAME)
+endef # deb_end
+
+define deb_func
+	$(call deb_begin)
+	$(call deb_changelog)
+	${Q}mkdir -p $(DEBDIR)/usr/bin
+	${Q}cp xgrub-password $(DEBDIR)/usr/bin/$(DEBNAME)
+	${Q}chmod 0755 $(DEBDIR)/usr/bin/$(DEBNAME)
+
+	${Q}mkdir -p $(DEBDIR)/usr/lib/$(DEBNAME)
+	${Q}cp xgrub-password-update $(DEBDIR)/usr/lib/$(DEBNAME)
+	${Q}chmod 0755 $(DEBDIR)/usr/lib/$(DEBNAME)
+
+	${Q}mkdir -p $(DEBDIR)/etc/apt/apt.conf.d
+	${Q}cp 99xgrub-password $(DEBDIR)/etc/apt/apt.conf.d
+	${Q}chmod 0644 $(DEBDIR)/etc/apt/apt.conf.d/99xgrub-password
+
+	$(call deb_control)
+	$(call deb_end)
+	$(Q)rm -r $(DEBDIR)
+	$(Q)ls -la *.deb
+endef #deb_func
+
+deb:
+	$(call deb_func)
+	@echo $(BEERSYM)$(PROJECT) deb done.
+
 debname:
-	@echo "$(DEBNAME)_$(PROJECT_VERSION)_all.deb"
+	@echo $(FINAL_DEBNAME)
+
+# to execute after cleaning all.
+define clean_done_func
+	$(Q)$(RM) -r $(DEBDIR) $(PROJECT)_*_$(ARCH).deb
+endef
 
 clean:
-	$(Q)echo clean
-	$(RM) -r debian/$(DEBNAME)/
-	$(RM) -r output/
-
-install:
-	$(Q)echo "install begin"
-	install -m 0755 xgrub-password -D --target-directory="$(DESTDIR)/usr/bin"
-	install -m 0755 xgrub-password-update -D --target-directory="$(DESTDIR)/usr/lib/$(DEBNAME)"
-	install -m 0644 99xgrub-password -D --target-directory="$(DESTDIR)/etc/apt/apt.conf.d"
-	$(Q)echo "install done"
-
-#
-# ---------- Git-buildpackage begin----------
-#
-
-GBP_OPTS = --git-ignore-new
-# GBP_OPTS += --unsigned-source
-# GBP_OPTS += --unsigned-changes
-# GBP_OPTS += --unsigned-buildinfo
-GBP_OPTS += --no-sign
-GBP_OPTS += --post-clean
-# GBP_OPTS += --git-tag
-# GBP_OPTS += --git-retag
-
-GBP_DCH_OPTS := --id-length=8
-GBP_DCH_OPTS += --new-version=$(PROJECT_VERSION)
-GBP_DCH_OPTS += --git-author
-GBP_DCH_OPTS += --commit
-GBP_DCH_OPTS += --release
-# GBP_DCH_OPTS += --spawn-editor=never
-# GBP_DCH_OPTS += -v
-
-# source and binary packages
-deb_all:
-	gbp buildpackage ${GBP_OPTS} --build=source,binary
-
-# binary package only
-deb_binary:
-	gbp buildpackage $(GBP_OPTS) --build=binary
-
-deb: release deb_binary
-
-# generate new changelog and release
-gen_release:
-	EMAIL=email@not-used gbp dch $(GBP_DCH_OPTS)
-
-release: gen_release
-
-#
-# ---------- Git-buildpackage end ----------
-#
-
+	$(call clean_done_func)
+	@echo $(BEERSYM)$(PROJECT) cleaning done.
