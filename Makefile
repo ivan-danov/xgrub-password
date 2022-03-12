@@ -89,6 +89,9 @@ info:
 version:
 	@echo "$(PROJECT_VERSION)"
 
+debname:
+	@echo "$(DEBNAME)_$(PROJECT_VERSION)_all.deb"
+
 clean:
 	$(Q)echo clean
 	$(RM) -r debian/$(DEBNAME)/
