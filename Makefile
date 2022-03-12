@@ -114,8 +114,8 @@ GBP_OPTS = --git-ignore-new
 # GBP_OPTS += --unsigned-buildinfo
 GBP_OPTS += --no-sign
 GBP_OPTS += --post-clean
-GBP_OPTS += --git-tag
-GBP_OPTS += --git-retag
+# GBP_OPTS += --git-tag
+# GBP_OPTS += --git-retag
 
 GBP_DCH_OPTS := --id-length=8
 GBP_DCH_OPTS += --new-version=$(PROJECT_VERSION)
