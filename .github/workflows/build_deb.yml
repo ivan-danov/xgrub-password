@@ -73,7 +73,7 @@ jobs:
     - name: Install extra packages
       run: |
         sudo apt-get update
-        sudo apt-get install git git-buildpackage lintian
+        sudo apt-get install git git-buildpackage lintian debhelper
 
     - name: Show info
       run: make info
