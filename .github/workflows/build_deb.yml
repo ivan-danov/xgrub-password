@@ -74,7 +74,7 @@ jobs:
     - name: Install extra packages
       run: |
         sudo apt-get update
-        sudo apt-get install git perl-base git2cl lintian debhelper
+        sudo apt-get install git git2cl lintian debhelper
 
     - name: Show info
       run: make info
