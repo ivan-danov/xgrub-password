@@ -94,9 +94,7 @@ endef # deb_begin
 ifneq ($(GIT2CL),)
 define deb_changelog
 	$(Q)git --no-pager log --pretty --numstat --summary | git2cl > $(DEBDIR)/usr/share/doc/$(DEBNAME)/changelog
-	$(Q)ls -la $(DEBDIR)/usr/share/doc/$(DEBNAME)/changelog
 	$(Q)gzip -9 -n $(DEBDIR)/usr/share/doc/$(DEBNAME)/changelog
-	$(Q)ls -la $(DEBDIR)/usr/share/doc/$(DEBNAME)/changelog*
 endef # deb_changelog
 else # GIT2CL
 define deb_changelog
