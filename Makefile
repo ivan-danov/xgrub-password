@@ -80,8 +80,7 @@ ifndef DEBDIR
 DEBDIR = ${DEBNAME}_deb/
 endif
 
-# GIT2CL := $(strip $(shell which git2cl))
-GIT2CL := git2cl
+GIT2CL := $(strip $(shell which git2cl))
 
 # begin of debian packet
 define deb_begin

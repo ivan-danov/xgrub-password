@@ -11,9 +11,9 @@ jobs:
     name: Create GitHub Release
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
-        fetch-depth: 0
+        fetch-depth: "0"
     - name: Create tag
       id: create_tag
       run: |
@@ -47,9 +47,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
-        fetch-depth: 0
+        fetch-depth: "0"
 
     - name: Create tag
       id: create_tag
