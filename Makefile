@@ -172,7 +172,7 @@ define deb_func
 
 	${Q}mkdir -p $(DEBDIR)/usr/lib/$(DEBNAME)
 	${Q}cp xgrub-password-update $(DEBDIR)/usr/lib/$(DEBNAME)
-	${Q}chmod 0755 $(DEBDIR)/usr/lib/$(DEBNAME)
+	${Q}chmod 0755 $(DEBDIR)/usr/lib/$(DEBNAME)/xgrub-password-update
 
 	${Q}mkdir -p $(DEBDIR)/etc/apt/apt.conf.d
 	${Q}cp 99xgrub-password $(DEBDIR)/etc/apt/apt.conf.d
