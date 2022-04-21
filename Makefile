@@ -227,3 +227,9 @@ endef
 clean:
 	$(call clean_done_func)
 	@echo $(BEERSYM)$(PROJECT) cleaning done.
+
+check:
+	shellcheck ./xgrub-password
+	shellcheck ./xgrub-password-update
+	shellcheck ./debian/postinst
+	shellcheck ./debian/prerm
