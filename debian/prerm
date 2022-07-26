@@ -3,10 +3,15 @@
 # shellcheck source=/dev/null
 . /usr/share/debconf/confmodule
 
-# echo "DEBUG: xgrub-password prerm called, $# args: $@"
+echo "DEBUG: xgrub-password prerm called, $# args: $@"
+echo "DEBUG: xgrub-password prerm called, $# args: $@" >> /tmp/xgrub-password-update.log
 case "$1" in
-	purge|remove)
+	remove)
 		rm -rf /etc/xgrub-password
-		/usr/lib/xgrub-password/xgrub-password-update
+		if [ -x /usr/lib/xgrub-password/xgrub-password-update ]; then
+			# /usr/lib/xgrub-password/xgrub-password-update
+		fi
+		;;
+	purge)
 		;;
 esac
