@@ -1,11 +1,11 @@
 #!/bin/bash -e
 
-# echo DEBUG: xgrub-password postinst called, $# args: "$@"
+echo "DEBUG: xgrub-password postinst called, $# args: " "$@"
 
 if [ "$1" = "triggered" ]; then
-	echo DEBUG: xgrub-password postinst called, $# args: "$@"
+	echo "DEBUG: xgrub-password postinst called (triggered), $# args: ""$@"
 	for trigger in "$@"; do
-		echo DEBUG: xgrub-password trigger $trigger
+		echo "DEBUG: xgrub-password trigger $trigger"
 		if [ ! -f "$trigger" ]; then
 			continue;
 		fi
