@@ -14,6 +14,8 @@ if [ "$1" = "triggered" ]; then
 		fi
 		case $trigger in
 			/etc/grub.d)
+				echo "DEBUG: xgrub-password postinst call /usr/lib/xgrub-password/xgrub-password-update ""$@"
+				echo "DEBUG: xgrub-password postinst call /usr/lib/xgrub-password/xgrub-password-update ""$@" >> /tmp/xgrub-password-update.log
 				/usr/lib/xgrub-password/xgrub-password-update "$@"
 				break
 			;;
