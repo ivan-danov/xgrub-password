@@ -10,7 +10,7 @@ if [ "$1" = "triggered" ]; then
 			continue;
 		fi
 		case $trigger in
-			/etc/grub.d/)
+			/etc/grub.d)
 				/usr/lib/xgrub-password/xgrub-password-update "$@"
 				break
 			;;
