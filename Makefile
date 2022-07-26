@@ -200,9 +200,9 @@ define deb_func
 	${Q}cp xgrub-password-update $(DEBDIR)/usr/lib/$(DEBNAME)
 	${Q}chmod 0755 $(DEBDIR)/usr/lib/$(DEBNAME)/xgrub-password-update
 
-	${Q}mkdir -p $(DEBDIR)/etc/apt/apt.conf.d
-	${Q}cp 99xgrub-password $(DEBDIR)/etc/apt/apt.conf.d
-	${Q}chmod 0644 $(DEBDIR)/etc/apt/apt.conf.d/99xgrub-password
+	#${Q}mkdir -p $(DEBDIR)/etc/apt/apt.conf.d
+	#${Q}cp 99xgrub-password $(DEBDIR)/etc/apt/apt.conf.d
+	#${Q}chmod 0644 $(DEBDIR)/etc/apt/apt.conf.d/99xgrub-password
 
 	$(call deb_control)
 	$(call deb_end)
