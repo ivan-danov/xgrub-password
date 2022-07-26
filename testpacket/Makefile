@@ -25,7 +25,7 @@
 #* DEALINGS IN THE SOFTWARE.                                                   *
 #*******************************************************************************
 
-PROJECT = xgrub-password
+PROJECT = xgrub-password-test
 
 GIT_LAST_TAG := $(shell git describe --tags --abbrev=0 2>/dev/null)
 
@@ -47,8 +47,6 @@ DEBDESC  = "$(VENDOR_NAME) $(PROJECT) package\\n"
 DEBDESC += "set grub user and password"
 
 DEBDIR = $(PROJECT)_deb
-
-PACKAGE_DEPS += ,grub-common, grub2-common, sed (>= 4.0), debianutils (>= 4.0), gawk, coreutils (>= 8.0)
 
 ifneq ($(V),0)
 Q =
@@ -192,13 +190,10 @@ endef # deb_end
 define deb_func
 	$(call deb_begin)
 	$(call deb_changelog)
-	${Q}mkdir -p $(DEBDIR)/usr/bin
-	${Q}cp xgrub-password $(DEBDIR)/usr/bin/$(DEBNAME)
-	${Q}chmod 0755 $(DEBDIR)/usr/bin/$(DEBNAME)
 
-	${Q}mkdir -p $(DEBDIR)/usr/lib/$(DEBNAME)
-	${Q}cp xgrub-password-update $(DEBDIR)/usr/lib/$(DEBNAME)
-	${Q}chmod 0755 $(DEBDIR)/usr/lib/$(DEBNAME)/xgrub-password-update
+	${Q}mkdir -p $(DEBDIR)/etc/grub.d
+	${Q}cp 42_xgrub_password_test $(DEBDIR)/etc/grub.d/42_xgrub_password_test
+	${Q}chmod 0755 $(DEBDIR)/etc/grub.d/42_xgrub_password_test
 
 	$(call deb_control)
 	$(call deb_end)

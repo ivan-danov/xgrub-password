@@ -3,8 +3,7 @@
 # shellcheck source=/dev/null
 . /usr/share/debconf/confmodule
 
-echo "DEBUG: xgrub-password prerm called, $# args: $@"
-echo "DEBUG: xgrub-password prerm called, $# args: $@" >> /tmp/xgrub-password-update.log
+# echo "DEBUG: xgrub-password prerm called, $# args: $@"
 case "$1" in
 	remove)
 		rm -rf /etc/xgrub-password
