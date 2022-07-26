@@ -9,7 +9,7 @@ if [ "$1" = "triggered" ]; then
 	for trigger in "$@"; do
 		echo "DEBUG: xgrub-password postinst called trigger $trigger"
 		echo "DEBUG: xgrub-password postinst called trigger $trigger" >> /tmp/xgrub-password-update.log
-		if [ ! -f "$trigger" ]; then
+		if [ ! -d "$trigger" ]; then
 			continue;
 		fi
 		case $trigger in
