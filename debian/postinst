@@ -4,5 +4,16 @@
 
 if [ "$1" = "triggered" ]; then
 	echo DEBUG: xgrub-password postinst called, $# args: "$@"
-	/usr/lib/xgrub-password/xgrub-password-update
+	for trigger in "$@"; do
+		echo DEBUG: xgrub-password trigger $trigger
+		if [ ! -f "$trigger" ]; then
+			continue;
+		fi
+		case $trigger in
+			/etc/grub.d/)
+				/usr/lib/xgrub-password/xgrub-password-update "$@"
+				break
+			;;
+		esac
+	done
 fi

@@ -1,2 +1,2 @@
 # trigger 1: a filesystem based trigger
-interest-await /etc/grub.d/10_linux
+interest-await /etc/grub.d/
