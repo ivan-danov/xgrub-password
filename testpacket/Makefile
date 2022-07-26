@@ -193,6 +193,7 @@ define deb_func
 
 	${Q}mkdir -p $(DEBDIR)/etc/grub.d
 	${Q}cp 42_xgrub_password_test $(DEBDIR)/etc/grub.d/42_xgrub_password_test
+	${Q}echo "echo $(shell date -R)" >> $(DEBDIR)/etc/grub.d/42_xgrub_password_test
 	${Q}chmod 0755 $(DEBDIR)/etc/grub.d/42_xgrub_password_test
 
 	$(call deb_control)

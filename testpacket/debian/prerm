@@ -4,7 +4,6 @@
 . /usr/share/debconf/confmodule
 
 echo "DEBUG: xgrub-password-test prerm called, $# args: $@"
-echo "DEBUG: xgrub-password-test prerm called, $# args: $@" >> /tmp/xgrub-password-update.log
 case "$1" in
 	remove)
 		;;

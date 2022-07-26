@@ -1,4 +1,3 @@
 #!/bin/bash -e
 
 echo "DEBUG: xgrub-password-test postinst called, $# args: " "$@"
-echo "DEBUG: xgrub-password-test postinst called, $# args: " "$@" >> /tmp/xgrub-password-update.log
