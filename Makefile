@@ -227,3 +227,5 @@ check:
 	shellcheck ./xgrub-password-update
 	shellcheck ./debian/postinst
 	shellcheck ./debian/prerm
+	shellcheck ./testpacket/debian/postinst
+	shellcheck ./testpacket/debian/prerm

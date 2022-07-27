@@ -8,7 +8,7 @@ case "$1" in
 	remove)
 		rm -rf /etc/xgrub-password
 		if [ -x /usr/lib/xgrub-password/xgrub-password-update ]; then
-			echo /usr/lib/xgrub-password/xgrub-password-update
+			/usr/lib/xgrub-password/xgrub-password-update
 		fi
 		;;
 	purge)

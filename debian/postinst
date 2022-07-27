@@ -1,21 +1,17 @@
 #!/bin/bash -e
 
-echo "DEBUG: xgrub-password postinst called, $# args: " "$@"
-echo "DEBUG: xgrub-password postinst called, $# args: " "$@" >> /tmp/xgrub-password-update.log
+echo "DEBUG: xgrub-password postinst called, $# args: $*"
 
 if [ "$1" = "triggered" ]; then
-	echo "DEBUG: xgrub-password postinst called (triggered), $# args: ""$@"
-	echo "DEBUG: xgrub-password postinst called (triggered), $# args: ""$@" >> /tmp/xgrub-password-update.log
+	echo "DEBUG: xgrub-password postinst called (triggered), $# args: $*"
 	for trigger in "$@"; do
 		echo "DEBUG: xgrub-password postinst called trigger $trigger"
-		echo "DEBUG: xgrub-password postinst called trigger $trigger" >> /tmp/xgrub-password-update.log
 		if [ ! -d "$trigger" ]; then
 			continue;
 		fi
 		case $trigger in
 			/etc/grub.d)
-				echo "DEBUG: xgrub-password postinst call /usr/lib/xgrub-password/xgrub-password-update ""$@"
-				echo "DEBUG: xgrub-password postinst call /usr/lib/xgrub-password/xgrub-password-update ""$@" >> /tmp/xgrub-password-update.log
+				echo "DEBUG: xgrub-password postinst call /usr/lib/xgrub-password/xgrub-password-update $*"
 				/usr/lib/xgrub-password/xgrub-password-update "$@"
 				break
 			;;

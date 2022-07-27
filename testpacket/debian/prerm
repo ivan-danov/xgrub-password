@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 . /usr/share/debconf/confmodule
 
-echo "DEBUG: xgrub-password-test prerm called, $# args: $@"
+echo "DEBUG: xgrub-password-test prerm called, $# args: $*"
 case "$1" in
 	remove)
 		;;
